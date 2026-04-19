@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelas 12-5 — ELFFADOUR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'] } } } }
+    </script>
+    <style>
+        :root {
+            --bg-base: #06060c;
+            --bg-surface: #0c0c16;
+            --bg-elevated: #12121e;
+            --bg-glass: rgba(255,255,255,0.03);
+            --bg-glass-hover: rgba(37,99,235,0.06);
+            --text-primary: #f0f0f5;
+            --text-secondary: rgba(240,240,245,0.5);
+            --text-tertiary: rgba(240,240,245,0.25);
+            --text-muted: rgba(240,240,245,0.08);
+            --border: rgba(255,255,255,0.06);
+            --border-glass: rgba(255,255,255,0.08);
+            --accent: #3B82F6;
+            --accent-glow: rgba(59,130,246,0.35);
+            --accent-bg: rgba(59,130,246,0.08);
+            --accent-border: rgba(59,130,246,0.2);
+            --nav-bg: rgba(6,6,12,0.75);
+            --overlay: rgba(6,6,12,0.85);
+            --input-bg: rgba(255,255,255,0.04);
+            --img-f: grayscale(100%) contrast(1.1);
+            --img-fh: grayscale(20%) contrast(1);
+            --shadow-glass: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.04);
+            --shadow-glow: 0 0 40px rgba(59,130,246,0.15);
+        }
+        [data-theme="light"] {
+            --bg-base: #f2f4f8;
+            --bg-surface: #ffffff;
+            --bg-elevated: #ffffff;
+            --bg-glass: rgba(255,255,255,0.6);
+            --bg-glass-hover: rgba(59,130,246,0.05);
+            --text-primary: #0f172a;
+            --text-secondary: rgba(15,23,42,0.5);
+            --text-tertiary: rgba(15,23,42,0.28);
+            --text-muted: rgba(15,23,42,0.06);
+            --border: rgba(15,23,42,0.07);
+            --border-glass: rgba(15,23,42,0.1);
+            --accent: #2563EB;
+            --accent-glow: rgba(37,99,235,0.2);
+            --accent-bg: rgba(37,99,235,0.06);
+            --accent-border: rgba(37,99,235,0.15);
+            --nav-bg: rgba(242,244,248,0.75);
+            --overlay: rgba(242,244,248,0.85);
+            --input-bg: rgba(0,0,0,0.04);
+            --img-f: grayscale(70%) contrast(1.05);
+            --img-fh: grayscale(0%) contrast(1);
+            --shadow-glass: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.8);
+            --shadow-glow: 0 0 40px rgba(37,99,235,0.08);
+        }
+        * { box-sizing: border-box; margin: 0; }
+        body { background: var(--bg-base); color: var(--text-primary); transition: background 0.6s, color 0.6s; cursor: none; }
+        ::selection { background: var(--accent); color: #fff; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+        /* ===== CUSTOM CURSOR ===== */
+        .cursor-dot { position:fixed; width:8px; height:8px; background:var(--accent); border-radius:50%; pointer-events:none; z-index:10000; transition: transform 0.1s; mix-blend-mode: difference; }
+        .cursor-ring { position:fixed; width:36px; height:36px; border:1.5px solid var(--accent); border-radius:50%; pointer-events:none; z-index:10000; transition: transform 0.25s ease-out, width 0.3s, height 0.3s, border-color 0.3s; opacity:0.5; }
+        .cursor-ring.hover { width:56px; height:56px; border-color: var(--accent-glow); opacity:0.8; }
+        @media (max-width:768px) { .cursor-dot, .cursor-ring { display:none; } body { cursor:auto; } }
+
+        /* ===== SCROLL PROGRESS ===== */
+        .scroll-progress { position:fixed; top:0; left:0; height:2px; background:var(--accent); z-index:9999; transition: width 0.1s linear; box-shadow: 0 0 10px var(--accent-glow); }
+
+        /* ===== NOISE ===== */
+        .noise { position:fixed; inset:0; pointer-events:none; z-index:9998; opacity:0.025; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+        /* ===== PARTICLES CANVAS ===== */
+        #particles { position:absolute; inset:0; z-index:0; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeUp { from { opacity:0; transform:translateY(50px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes typeChar { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes float { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-12px); } }
+        @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px var(--accent-glow); } 50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(59,130,246,0.1); } }
+        @keyframes spin-slow { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+        @keyframes marquee { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+        @keyframes dash { to { stroke-dashoffset: 0; } }
+
+        .anim-fadeUp { animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; opacity:0; }
+        .anim-fadeIn { animation: fadeIn 1s ease forwards; opacity:0; }
+        .anim-float { animation: float 6s ease-in-out infinite; }
+        .anim-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+        .anim-spin-slow { animation: spin-slow 20s linear infinite; }
+        .anim-marquee { animation: marquee 30s linear infinite; }
+        .d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}.d6{animation-delay:.6s}.d7{animation-delay:.7s}.d8{animation-delay:.8s}
+
+        /* ===== SCROLL REVEAL ===== */
+        .sr { opacity:0; transform:translateY(50px); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+        .sr.visible { opacity:1; transform:translateY(0); }
+        .sr-x { opacity:0; transform:translateX(-60px); transition: all 0.9s cubic-bezier(0.16,1,0.3,1); }
+        .sr-x.visible { opacity:1; transform:translateX(0); }
+        .sr-s { opacity:0; transform:scale(0.88); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+        .sr-s.visible { opacity:1; transform:scale(1); }
+
+        /* ===== GLASS CARD ===== */
+        .glass {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 16px;
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            box-shadow: var(--shadow-glass);
+            transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .glass:hover {
+            border-color: var(--accent-border);
+            background: var(--bg-glass-hover);
+            box-shadow: var(--shadow-glass), var(--shadow-glow);
+        }
+
+        /* ===== HERO ===== */
+        .hero-title {
+            font-size: clamp(3rem, 12vw, 11rem);
+            font-weight: 900; line-height: 0.85;
+            letter-spacing: -0.06em; text-transform: uppercase;
+        }
+        .type-cursor { display:inline-block; width:3px; height:1em; background:var(--accent); margin-left:4px; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+        /* ===== NAV ===== */
+        .nav-pill {
+            font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 0.12em; text-transform: uppercase;
+            padding: 6px 14px; border-radius: 999px;
+            color: var(--text-secondary);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .nav-pill:hover, .nav-pill.active {
+            color: var(--text-primary);
+            background: var(--accent-bg);
+            border-color: var(--accent-border);
+        }
+
+        /* ===== BENTO GRID ===== */
+        .bento { display:grid; gap:12px; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(140px, auto); }
+        @media (max-width:768px) { .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: minmax(120px, auto); } }
+        .bento-lg { grid-column: span 2; grid-row: span 2; }
+        @media (max-width:768px) { .bento-lg { grid-column: span 2; grid-row: span 1; } }
+        .bento-wide { grid-column: span 2; }
+        .bento-tall { grid-row: span 2; }
+        @media (max-width:768px) { .bento-tall { grid-row: span 1; } }
+
+        /* ===== HORIZONTAL GALLERY ===== */
+        .h-gallery { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; padding-bottom:12px; scrollbar-width:none; }
+        .h-gallery::-webkit-scrollbar { display:none; }
+        .h-gallery-item { scroll-snap-align:start; flex-shrink:0; width:clamp(260px,35vw,400px); position:relative; border-radius:16px; overflow:hidden; cursor:pointer; }
+        .h-gallery-item img { width:100%; height:100%; object-fit:cover; transition: transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.7s; filter:var(--img-f); }
+        .h-gallery-item:hover img { transform:scale(1.08); filter:var(--img-fh); }
+        .h-gallery-item .hg-overlay { position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 50%, transparent 100%); opacity:0; transition:opacity 0.4s; }
+        .h-gallery-item:hover .hg-overlay { opacity:1; }
+        .h-gallery-item .hg-info { position:absolute; bottom:0; left:0; right:0; padding:1.25rem; transform:translateY(20px); opacity:0; transition: all 0.5s cubic-bezier(0.16,1,0.3,1); }
+        .h-gallery-item:hover .hg-info { transform:translateY(0); opacity:1; }
+
+        /* ===== 3D TILT CARD ===== */
+        .tilt-card {
+            perspective: 800px;
+            transform-style: preserve-3d;
+        }
+        .tilt-inner {
+            transition: transform 0.15s ease-out, box-shadow 0.3s;
+            transform-style: preserve-3d;
+        }
+        .tilt-inner .tilt-shine {
+            position:absolute; inset:0; border-radius:inherit; pointer-events:none;
+            background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.08) 0%, transparent 60%);
+            opacity:0; transition:opacity 0.3s;
+        }
+        .tilt-inner:hover .tilt-shine { opacity:1; }
+
+        /* ===== STUDENT CARD ===== */
+        .stu-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 14px; overflow:hidden;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .stu-card:hover {
+            border-color: var(--accent-border);
+            box-shadow: var(--shadow-glass), var(--shadow-glow);
+            transform: translateY(-8px);
+        }
+        .stu-card .photo-wrap { position:relative; overflow:hidden; aspect-ratio:3/4; cursor:pointer; }
+        .stu-card .photo-wrap img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition: opacity 0.5s, filter 0.5s; }
+        .stu-card .pf { opacity:1; filter:var(--img-f); z-index:1; }
+        .stu-card .pb { opacity:0; filter:var(--img-fh); z-index:2; }
+        .stu-card .photo-wrap:hover .pf { opacity:0; }
+        .stu-card .photo-wrap:hover .pb { opacity:1; }
+        .stu-card.hidden-card { opacity:0; transform:scale(0.85); pointer-events:none; position:absolute; }
+
+        /* ===== TAB BUTTONS ===== */
+        .tab-btn {
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 0.15em; text-transform: uppercase;
+            padding: 8px 16px; border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--text-tertiary);
+            background: transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .tab-btn:hover { border-color: var(--accent-border); color: var(--text-secondary); }
+        .tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+        /* ===== CIRCULAR STAT ===== */
+        .circle-stat { position:relative; width:100px; height:100px; }
+        .circle-stat svg { transform:rotate(-90deg); }
+        .circle-stat .track { fill:none; stroke:var(--border); stroke-width:3; }
+        .circle-stat .fill { fill:none; stroke:var(--accent); stroke-width:3; stroke-linecap:round; stroke-dasharray:283; stroke-dashoffset:283; transition: stroke-dashoffset 1.5s cubic-bezier(0.16,1,0.3,1); filter: drop-shadow(0 0 6px var(--accent-glow)); }
+        .circle-stat .num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.5rem; color:var(--accent); }
+
+        /* ===== ACCORDION ===== */
+        .acc-item { border-bottom: 1px solid var(--border); }
+        .acc-btn { width:100%; display:flex; align-items:center; justify-content:space-between; padding:1rem 0; color:var(--text-primary); font-weight:700; font-size:0.85rem; text-align:left; background:none; border:none; cursor:pointer; transition: color 0.3s; }
+        .acc-btn:hover { color:var(--accent); }
+        .acc-btn .acc-icon { transition: transform 0.3s; font-size:1.2rem; color:var(--text-tertiary); }
+        .acc-btn.open .acc-icon { transform:rotate(45deg); color:var(--accent); }
+        .acc-body { max-height:0; overflow:hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .acc-body.open { max-height:200px; }
+
+        /* ===== TOAST ===== */
+        .toast-container { position:fixed; bottom:24px; right:24px; z-index:10001; display:flex; flex-direction:column; gap:8px; }
+        .toast {
+            padding: 14px 20px; border-radius: 12px;
+            background: var(--bg-elevated); border: 1px solid var(--accent-border);
+            box-shadow: var(--shadow-glass), var(--shadow-glow);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            font-size: 0.8rem; color: var(--text-primary);
+            display:flex; align-items:center; gap:10px;
+            animation: toastIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards;
+            max-width: 340px;
+        }
+        .toast.out { animation: toastOut 0.3s ease forwards; }
+        @keyframes toastIn { from { opacity:0; transform:translateX(40px) scale(0.95); } to { opacity:1; transform:translateX(0) scale(1); } }
+        @keyframes toastOut { from { opacity:1; transform:translateX(0); } to { opacity:0; transform:translateX(40px); } }
+
+        /* ===== POPUP ===== */
+        .popup-overlay {
+            position:fixed; inset:0; z-index:200;
+            display:flex; align-items:center; justify-content:center;
+            padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.4s;
+        }
+        .popup-overlay.active { opacity:1; pointer-events:all; }
+        .popup-overlay .popup-bg { position:absolute; inset:0; background:var(--overlay); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); }
+        .popup-overlay .popup-content {
+            position:relative; z-index:1; max-width:580px; width:100%;
+            background:var(--bg-elevated); border:1px solid var(--border-glass);
+            border-radius:20px; box-shadow:var(--shadow-glass), 0 30px 80px rgba(0,0,0,0.4);
+            transform:scale(0.9) translateY(30px);
+            transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+            overflow:hidden;
+        }
+        .popup-overlay.active .popup-content { transform:scale(1) translateY(0); }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position:fixed; inset:0; z-index:200;
+            background:var(--overlay); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+            display:flex; align-items:center; justify-content:center;
+            opacity:0; pointer-events:none; transition:opacity 0.4s;
+        }
+        .lightbox.active { opacity:1; pointer-events:all; }
+        .lightbox img { max-width:90vw; max-height:85vh; object-fit:contain; border-radius:12px; transform:scale(0.9); transition:transform 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .lightbox.active img { transform:scale(1); }
+
+        /* ===== MOBILE MENU ===== */
+        .mob-menu {
+            position:fixed; inset:0; z-index:150;
+            background:var(--bg-base); display:flex; flex-direction:column;
+            align-items:center; justify-content:center; gap:2rem;
+            clip-path:circle(0% at calc(100% - 40px) 36px);
+            transition: clip-path 0.6s cubic-bezier(0.16,1,0.3,1), background 0.5s;
+        }
+        .mob-menu.active { clip-path:circle(150% at calc(100% - 40px) 36px); }
+        .mob-menu a { font-size:1.4rem; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; color:var(--text-tertiary); transition:color 0.3s; }
+        .mob-menu a:hover { color:var(--accent); }
+
+        /* ===== FORM ===== */
+        .form-input {
+            width:100%; background:var(--input-bg); border:1px solid var(--border);
+            border-radius:12px; padding:0.85rem 1rem 0.85rem 2.8rem;
+            font-size:0.85rem; color:var(--text-primary); outline:none; transition:all 0.3s;
+        }
+        .form-input::placeholder { color:var(--text-tertiary); }
+        .form-input:focus { border-color:var(--accent-border); box-shadow: 0 0 0 3px var(--accent-bg); }
+
+        /* ===== SECTION LABEL ===== */
+        .sec-label { font-size:0.65rem; font-weight:800; letter-spacing:0.3em; text-transform:uppercase; color:var(--accent); display:inline-flex; align-items:center; gap:8px; }
+        .sec-label::before { content:''; width:24px; height:2px; background:var(--accent); border-radius:1px; }
+        .sec-title { font-size:clamp(1.6rem,4.5vw,3.2rem); font-weight:900; line-height:1; letter-spacing:-0.04em; text-transform:uppercase; }
+
+        /* ===== NO RESULTS ===== */
+        .no-res { display:none; text-align:center; padding:3rem; color:var(--text-tertiary); }
+        .no-res.show { display:block; }
+
+        /* ===== GRADIENT MESH ===== */
+        .mesh-1 { position:absolute; width:500px; height:500px; border-radius:50%; background:radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); filter:blur(80px); pointer-events:none; }
+        .mesh-2 { position:absolute; width:400px; height:400px; border-radius:50%; background:radial-gradient(circle, rgba(139,92,246,0.06) 0%, transparent 70%); filter:blur(80px); pointer-events:none; }
+        .mesh-3 { position:absolute; width:350px; height:350px; border-radius:50%; background:radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%); filter:blur(60px); pointer-events:none; }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden">
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress" style="width:0;"></div>
+
+<!-- NOISE -->
+<div class="noise"></div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <button onclick="closeLightbox()" class="absolute top-5 right-5 z-10 w-10 h-10 rounded-full flex items-center justify-center glass" style="color:var(--text-secondary);">
+        <span class="iconify" data-icon="mdi:close" data-width="20"></span>
+    </button>
+    <img id="lightboxImg" src="" alt="Gallery">
+</div>
+
+<!-- STUDENT POPUP -->
+<div class="popup-overlay" id="stuPopup">
+    <div class="popup-bg" onclick="closeStuPopup()"></div>
+    <div class="popup-content">
+        <button onclick="closeStuPopup()" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full glass flex items-center justify-center" style="color:var(--text-tertiary);">
+            <span class="iconify" data-icon="mdi:close" data-width="16"></span>
+        </button>
+        <div class="flex flex-col sm:flex-row">
+            <div class="sm:w-2/5 flex-shrink-0">
+                <div class="photo-wrap aspect-[3/4] sm:aspect-auto sm:h-full">
+                    <img id="pp1" src="" alt="" class="pf">
+                    <img id="pp2" src="" alt="" class="pb">
+                </div>
+            </div>
+            <div class="flex-1 p-6 sm:p-8 flex flex-col justify-center">
+                <span class="text-[10px] font-bold tracking-[0.25em] uppercase" style="color:var(--accent);" id="ppRole"></span>
+                <h3 class="text-2xl sm:text-3xl font-black tracking-tight mt-2" id="ppName"></h3>
+                <div class="w-10 h-0.5 mt-4 mb-5 rounded" style="background:var(--accent);"></div>
+                <p class="text-sm leading-relaxed" style="color:var(--text-secondary);" id="ppQuote"></p>
+                <div class="mt-6 flex items-center gap-2" style="color:var(--text-tertiary);">
+                    <span class="iconify" data-icon="mdi:cursor-default-click-outline" data-width="14"></span>
+                    <span class="text-[10px] font-semibold tracking-wider uppercase">Hover foto untuk flip</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mobMenu">
+    <a href="#home" onclick="closeMob()">Beranda</a>
+    <a href="#about" onclick="closeMob()">Tentang</a>
+    <a href="#gallery" onclick="closeMob()">Galeri</a>
+    <a href="#students" onclick="closeMob()">Anggota</a>
+    <a href="#contact" onclick="closeMob()">Kontak</a>
+</div>
+
+<!-- ===== NAV ===== -->
+<nav class="fixed top-0 left-0 right-0 z-[100]" id="mainNav" style="background:var(--nav-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+        <a href="#home" class="flex items-center gap-3 group">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center anim-pulse-glow" style="background:var(--accent);">
+                <span class="text-white font-black text-sm">R</span>
+            </div>
+            <div class="hidden sm:block">
+                <div class="font-extrabold text-xs tracking-[0.15em] uppercase" style="color:var(--text-primary);">12-5</div>
+                <div class="text-[9px] tracking-wider" style="color:var(--text-tertiary);">ELVADOUR</div>
+            </div>
+        </a>
+        <div class="hidden md:flex items-center gap-1.5">
+            <a href="#home" class="nav-pill active" data-sec="home">Beranda</a>
+            <a href="#about" class="nav-pill" data-sec="about">Tentang</a>
+            <a href="#gallery" class="nav-pill" data-sec="gallery">Galeri</a>
+            <a href="#students" class="nav-pill" data-sec="students">Anggota</a>
+            <a href="#contact" class="nav-pill" data-sec="contact">Kontak</a>
+        </div>
+        <div class="flex items-center gap-2">
+            <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl glass flex items-center justify-center" style="color:var(--text-secondary);" title="Ganti tema">
+                <span class="iconify ti-dark" data-icon="mdi:weather-sunny" data-width="17"></span>
+                <span class="iconify ti-light" data-icon="mdi:weather-night" data-width="17" style="display:none;"></span>
+            </button>
+            <button class="md:hidden w-9 h-9 rounded-xl glass flex items-center justify-center" style="color:var(--text-primary);" onclick="toggleMob()">
+                <span class="iconify" data-icon="mdi:menu" data-width="20" id="mobIcon"></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <canvas id="particles"></canvas>
+    <div class="mesh-1" style="top:-10%;left:-5%;"></div>
+    <div class="mesh-2" style="bottom:-15%;right:-10%;"></div>
+    <div class="absolute inset-0 opacity-[0.02]" style="background-image:linear-gradient(var(--text-primary) 1px,transparent 1px),linear-gradient(90deg,var(--text-primary) 1px,transparent 1px);background-size:70px 70px;"></div>
+
+    <div class="relative z-10 text-center px-4 max-w-6xl mx-auto">
+        <!-- Floating badge -->
+        <div class="anim-fadeIn opacity-0 d1 mb-6 sm:mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full glass anim-float" style="animation-delay:0s;">
+            <div class="w-2 h-2 rounded-full" style="background:var(--accent);box-shadow:0 0 8px var(--accent-glow);"></div>
+            <span class="text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase" style="color:var(--text-secondary);">ELFFADOUR — 2024/2026</span>
+        </div>
+
+        <h1 class="hero-title anim-fadeUp opacity-0 d3" style="color:var(--text-primary);">
+            KELAS<br>
+            <span style="color:var(--accent);">12-5</span>
+        </h1>
+
+        <!-- Typing text -->
+        <div class="mt-6 sm:mt-8 anim-fadeIn opacity-0 d5 h-6 flex items-center justify-center">
+            <span class="text-sm sm:text-base" style="color:var(--text-secondary);" id="typeText"></span>
+            <span class="type-cursor"></span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-10 sm:mt-12 anim-fadeUp opacity-0 d7">
+            <a href="#about" class="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-xs tracking-[0.15em] uppercase text-white overflow-hidden" style="background:var(--accent);">
+                <span class="relative z-10">Jelajahi</span>
+                <span class="iconify relative z-10" data-icon="mdi:arrow-down" data-width="14"></span>
+                <div class="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            </a>
+            <a href="#students" class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-xs tracking-[0.15em] uppercase glass" style="color:var(--text-secondary);">
+                <span class="iconify" data-icon="mdi:account-group" data-width="16"></span>
+                Anggota
+            </a>
+        </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 anim-fadeIn opacity-0 d8">
+        <div class="w-6 h-10 rounded-full border-2 flex items-start justify-center p-1.5" style="border-color:var(--border);">
+            <div class="w-1 h-2.5 rounded-full animate-bounce" style="background:var(--accent);"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<div class="py-4 overflow-hidden" style="border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+    <div class="flex w-max anim-marquee">
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">ALOMANI</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">MAPAI JALAN SATAPAK</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">AMBU KIDS</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">AGIT</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">ANAK TEKNIK NIH BOS</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">SNBP MERAH</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">Kelas 12-5</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">ELVADOUR</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">ALOMANI</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">MAPAI JALAN SATAPAK</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">AMBU KIDS</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+        <span class="font-black text-xs tracking-[0.4em] uppercase whitespace-nowrap mx-8" style="color:var(--text-muted);">AGIT</span>
+        <span style="color:var(--accent);opacity:0.3;">◆</span>
+    </div>
+</div>
+
+<!-- ===== ABOUT — BENTO GRID ===== -->
+<section id="about" class="py-20 sm:py-28 relative">
+    <div class="mesh-3" style="top:20%;right:-5%;"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="mb-12 sr">
+            <span class="sec-label">Tentang Kami</span>
+            <h2 class="sec-title mt-4" style="color:var(--text-primary);">ONLY<br><span style="color:var(--text-tertiary);">ELFFADOUR</span></h2>
+        </div>
+
+        <div class="bento">
+            <!-- Large image -->
+            <div class="bento-lg glass overflow-hidden sr-s tilt-card" style="transition-delay:0s;">
+                <div class="tilt-inner w-full h-full relative rounded-2xl overflow-hidden">
+                    <div class="tilt-shine rounded-2xl"></div>
+                    <img src="https://picsum.photos/seed/rpl-bento-main/800/800.jpg" alt="Kelas" class="w-full h-full object-cover" style="filter:var(--img-f);transition:filter 0.7s;">
+                    <div class="absolute inset-0" style="background:linear-gradient(135deg, transparent 40%, var(--bg-base) 100%);"></div>
+                    <div class="absolute bottom-0 left-0 p-5 sm:p-7">
+                        <div class="text-3xl sm:text-4xl font-black" style="color:var(--text-primary);">ELFFADOUR</div>
+                        <div class="text-[10px] font-bold tracking-[0.2em] uppercase mt-1" style="color:var(--accent);">Since 2024</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stat circles -->
+            <div class="glass p-5 flex flex-col items-center justify-center sr-s" style="transition-delay:0.05s;">
+                <div class="circle-stat" data-pct="100" data-val="30">
+                    <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="fill" cx="50" cy="50" r="45"/></svg>
+                    <div class="num">0</div>
+                </div>
+                <div class="text-[9px] font-bold tracking-[0.2em] uppercase mt-3" style="color:var(--text-tertiary);">Siswa</div>
+            </div>
+            <div class="glass p-5 flex flex-col items-center justify-center sr-s" style="transition-delay:0.1s;">
+                <div class="circle-stat" data-pct="100" data-val="2">
+                    <svg viewBox="0 0 100 100"><circle class="track" cx="50" cy="50" r="45"/><circle class="fill" cx="50" cy="50" r="45"/></svg>
+                    <div class="num">0</div>
+                </div>
+                <div class="text-[9px] font-bold tracking-[0.2em] uppercase mt-3" style="color:var(--text-tertiary);">Project P5</div>
+            </div>
+
+            <!-- Quote -->
+            <div class="bento-wide glass p-6 sm:p-8 flex flex-col justify-center sr-s" style="transition-delay:0.15s;">
+                <span class="iconify mb-3" data-icon="mdi:format-quote-open" data-width="28" style="color:var(--accent);opacity:0.5;"></span>
+                <p class="text-sm sm:text-base font-medium leading-relaxed" style="color:var(--text-secondary);">
+                    MBG adalah singkatan dari Makan Bergizi Gratis, sebuah program prioritas pemerintahan Presiden Prabowo Subianto yang diluncurkan pada 6 Januari 2025.
+                </p>
+                <p class="text-xs sm:text-sm leading-relaxed mt-3" style="color:var(--text-tertiary);">
+                    Menurunkan angka stunting, gizi buruk, serta meningkatkan kualitas SDM dan kesehatan ibu/anak di seluruh Indonesia.
+                </p>
+            </div>
+
+            <!-- Skills -->
+            <div class="bento-wide glass p-6 sm:p-8 sr-s" style="transition-delay:0.2s;">
+                <div class="text-[10px] font-bold tracking-[0.2em] uppercase mb-5" style="color:var(--accent);">Statistik Kelas</div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <span class="text-[11px] font-bold tracking-wider uppercase" style="color:var(--text-secondary);">ANGKA KERACUNAN</span>
+                            <span class="text-[11px] font-bold" style="color:var(--accent);">90%</span>
+                        </div>
+                        <div class="h-2 rounded-full overflow-hidden" style="background:var(--border);">
+                            <div class="h-full rounded-full skill-bar" data-w="90%" style="background:linear-gradient(90deg, var(--accent), #8B5CF6);width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <span class="text-[11px] font-bold tracking-wider uppercase" style="color:var(--text-secondary);">PRESENTASE HIDUP</span>
+                            <span class="text-[11px] font-bold" style="color:var(--accent);">0.01%</span>
+                        </div>
+                        <div class="h-2 rounded-full overflow-hidden" style="background:var(--border);">
+                            <div class="h-full rounded-full skill-bar" data-w="1%" style="background:linear-gradient(90deg, var(--accent), #06B6D4);width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <span class="text-[11px] font-bold tracking-wider uppercase" style="color:var(--text-secondary);">RATING MBG</span>
+                            <span class="text-[11px] font-bold" style="color:var(--accent);">50%</span>
+                        </div>
+                        <div class="h-2 rounded-full overflow-hidden" style="background:var(--border);">
+                            <div class="h-full rounded-full skill-bar" data-w="50%" style="background:linear-gradient(90deg, var(--accent), #F59E0B);width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1.5">
+                            <span class="text-[11px] font-bold tracking-wider uppercase" style="color:var(--text-secondary);">RATING PRABOWO</span>
+                            <span class="text-[11px] font-bold" style="color:var(--accent);">11%</span>
+                        </div>
+                        <div class="h-2 rounded-full overflow-hidden" style="background:var(--border);">
+                            <div class="h-full rounded-full skill-bar" data-w="11%" style="background:linear-gradient(90deg, var(--accent), #EF4444);width:0;transition:width 1.5s cubic-bezier(0.16,1,0.3,1);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infinity stat -->
+            <div class="glass p-5 flex flex-col items-center justify-center sr-s" style="transition-delay:0.25s;">
+                <div class="text-3xl font-black" style="color:var(--accent);">∞</div>
+                <div class="text-[9px] font-bold tracking-[0.2em] uppercase mt-2" style="color:var(--text-tertiary);">Prestasi</div>
+            </div>
+
+            <!-- Family stat -->
+            <div class="glass p-5 flex flex-col items-center justify-center sr-s" style="transition-delay:0.3s;">
+                <div class="text-3xl font-black" style="color:var(--accent);">1</div>
+                <div class="text-[9px] font-bold tracking-[0.2em] uppercase mt-2" style="color:var(--text-tertiary);">Keluarga</div>
+            </div>
+
+            <!-- Side image -->
+            <div class="glass overflow-hidden sr-s tilt-card" style="transition-delay:0.35s;">
+                <div class="tilt-inner w-full h-full relative rounded-2xl overflow-hidden">
+                    <div class="tilt-shine rounded-2xl"></div>
+                    <img src="https://picsum.photos/seed/rpl-bento-side/400/400.jpg" alt="Activity" class="w-full h-full object-cover" style="filter:var(--img-f);transition:filter 0.7s;">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== GALLERY — HORIZONTAL SCROLL ===== -->
+<section id="gallery" class="py-20 sm:py-28 relative overflow-hidden">
+    <div class="mesh-1" style="bottom:0;left:20%;opacity:0.5;"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 mb-10">
+        <div class="flex items-end justify-between gap-4">
+            <div class="sr">
+                <span class="sec-label">Dokumentasi</span>
+                <h2 class="sec-title mt-4" style="color:var(--text-primary);">GALERI</h2>
+            </div>
+            <div class="flex gap-2 sr" style="transition-delay:0.1s;">
+                <button onclick="scrollGallery(-1)" class="w-10 h-10 rounded-xl glass flex items-center justify-center" style="color:var(--text-secondary);">
+                    <span class="iconify" data-icon="mdi:arrow-left" data-width="18"></span>
+                </button>
+                <button onclick="scrollGallery(1)" class="w-10 h-10 rounded-xl glass flex items-center justify-center" style="color:var(--text-secondary);">
+                    <span class="iconify" data-icon="mdi:arrow-right" data-width="18"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-gallery px-4 sm:px-6 sr" id="hGallery">
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg1/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Workshop</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">Adalah Pokoknya</h3>
+            </div>
+        </div>
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg2/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Meeting</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">Diskusi Project</h3>
+            </div>
+        </div>
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg3/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Presentasi</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">Demo Prabowo</h3>
+            </div>
+        </div>
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg4/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Outdoor</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">Study Tour</h3>
+            </div>
+        </div>
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg5/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Kompetisi</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">CLASSMEET</h3>
+            </div>
+        </div>
+        <div class="h-gallery-item" style="height:380px;" onclick="openLightbox(this)">
+            <img src="https://picsum.photos/seed/rpl-hg6/800/600.jpg" alt="">
+            <div class="hg-overlay"></div>
+            <div class="hg-info">
+                <span class="text-[9px] font-bold tracking-[0.2em] uppercase text-white/40">Ceremony</span>
+                <h3 class="text-lg font-extrabold tracking-tight text-white mt-1">Penerimaan Rapor</h3>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STUDENTS ===== -->
+<section id="students" class="py-20 sm:py-28 relative">
+    <div class="mesh-2" style="top:10%;left:-10%;"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-10 gap-6">
+            <div class="sr">
+                <span class="sec-label">Anggota</span>
+                <h2 class="sec-title mt-4" style="color:var(--text-primary);">SISWA<span style="color:var(--text-tertiary);"> KAMI</span></h2>
+            </div>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sr" style="transition-delay:0.1s;">
+                <!-- Tabs -->
+                <div class="flex flex-wrap gap-2" id="tabContainer">
+                    <button class="tab-btn active" data-cat="all" onclick="filterTab('all',this)">Semua</button>
+                    <button class="tab-btn" data-cat="Frontend" onclick="filterTab('Frontend',this)">ketua kelas</button>
+                    <button class="tab-btn" data-cat="Backend" onclick="filterTab('Backend',this)">wakil kelas</button>
+                    <button class="tab-btn" data-cat="Design" onclick="filterTab('Design',this)">sekertaris</button>
+                    <button class="tab-btn" data-cat="Other" onclick="filterTab('Other',this)">Lainnya</button>
+                </div>
+                <!-- Search -->
+                <div class="relative w-full sm:w-56">
+                    <span class="iconify absolute left-3 top-1/2 -translate-y-1/2" data-icon="mdi:magnify" data-width="16" style="color:var(--text-tertiary);"></span>
+                    <input type="text" id="searchInput" class="form-input" placeholder="Cari nama..." oninput="filterStudents()">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3" id="stuGrid"></div>
+        <div class="no-res" id="noRes">
+            <span class="iconify mx-auto mb-3" data-icon="mdi:account-search-outline" data-width="48" style="color:var(--text-muted);"></span>
+            <p class="text-sm font-semibold" style="color:var(--text-tertiary);">Siswa tidak ditemukan</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="py-24 sm:py-32 relative overflow-hidden">
+    <div class="absolute inset-0" style="background:radial-gradient(ellipse at center, rgba(59,130,246,0.06) 0%, transparent 60%);"></div>
+    <div class="absolute inset-0 opacity-[0.02]" style="background-image:linear-gradient(var(--text-primary) 1px,transparent 1px),linear-gradient(90deg,var(--text-primary) 1px,transparent 1px);background-size:50px 50px;"></div>
+    <!-- Floating shapes -->
+    <div class="absolute top-1/4 left-[10%] w-20 h-20 rounded-2xl border anim-float glass" style="animation-delay:0s;opacity:0.3;"></div>
+    <div class="absolute bottom-1/4 right-[15%] w-14 h-14 rounded-full border anim-float glass" style="animation-delay:2s;opacity:0.2;"></div>
+    <div class="absolute top-1/3 right-[8%] w-10 h-10 rounded-lg border anim-float glass" style="animation-delay:4s;opacity:0.25;"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10 sr">
+        <span class="sec-label">Ikaw ang parin</span>
+        <h2 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase leading-[0.85] mt-6" style="color:var(--text-primary);">
+            Multo<br>
+            <span style="color:var(--accent);opacity:0.4;">ako</span><br>
+            ang sa iyon?
+        </h2>
+        <p class="text-xs sm:text-sm mt-8 max-w-md mx-auto leading-relaxed" style="color:var(--text-tertiary);">
+            Setiap hari pasti Senin sampai Minggu
+        </p>
+        <a href="#contact" class="inline-flex items-center gap-2.5 px-8 py-4 rounded-xl font-bold text-xs tracking-[0.15em] uppercase text-white mt-10 transition-all hover:scale-105" style="background:var(--accent);box-shadow:0 0 30px var(--accent-glow);">
+            Hubungi Kami
+            <span class="iconify" data-icon="mdi:arrow-right" data-width="14"></span>
+        </a>
+    </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="py-20 sm:py-28" style="border-top:1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+        <div class="grid lg:grid-cols-5 gap-12 lg:gap-16">
+            <!-- Info -->
+            <div class="lg:col-span-2 sr-x">
+                <span class="sec-label">Kontak</span>
+                <h2 class="sec-title mt-4 mb-8" style="color:var(--text-primary);">HUBUNGI<br><span style="color:var(--text-tertiary);">KAMI</span></h2>
+
+                <!-- Accordion -->
+                <div>
+                    <div class="acc-item">
+                        <button class="acc-btn open" onclick="toggleAcc(this)">
+                            <div class="flex items-center gap-3">
+                                <span class="iconify" data-icon="mdi:school" data-width="18" style="color:var(--accent);"></span>
+                                <span>Sekolah</span>
+                            </div>
+                            <span class="acc-icon">+</span>
+                        </button>
+                        <div class="acc-body open">
+                            <div class="pb-4 pl-9 text-sm" style="color:var(--text-secondary);">SMA 3 SUBANG<br><span style="color:var(--text-tertiary);">Jalanin aja</span></div>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-btn" onclick="toggleAcc(this)">
+                            <div class="flex items-center gap-3">
+                                <span class="iconify" data-icon="mdi:email-outline" data-width="18" style="color:var(--accent);"></span>
+                                <span>Email</span>
+                            </div>
+                            <span class="acc-icon">+</span>
+                        </button>
+                        <div class="acc-body">
+                            <div class="pb-4 pl-9 text-sm" style="color:var(--text-secondary);">-</div>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-btn" onclick="toggleAcc(this)">
+                            <div class="flex items-center gap-3">
+                                <span class="iconify" data-icon="mdi:instagram" data-width="18" style="color:var(--accent);"></span>
+                                <span>Instagram</span>
+                            </div>
+                            <span class="acc-icon">+</span>
+                        </button>
+                        <div class="acc-body">
+                            <div class="pb-4 pl-9 text-sm" style="color:var(--text-secondary);">@Elffadour</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social links -->
+                <div class="flex gap-3 mt-8">
+                    <a href="#" class="w-11 h-11 rounded-xl glass flex items-center justify-center transition-all hover:scale-110" style="color:var(--text-tertiary);" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent-border)'" onmouseout="this.style.color='var(--text-tertiary)';this.style.borderColor=''">
+                        <span class="iconify" data-icon="mdi:instagram" data-width="20"></span>
+                    </a>
+                    <a href="#" class="w-11 h-11 rounded-xl glass flex items-center justify-center transition-all hover:scale-110" style="color:var(--text-tertiary);" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent-border)'" onmouseout="this.style.color='var(--text-tertiary)';this.style.borderColor=''">
+                        <span class="iconify" data-icon="mdi:github" data-width="20"></span>
+                    </a>
+                    <a href="#" class="w-11 h-11 rounded-xl glass flex items-center justify-center transition-all hover:scale-110" style="color:var(--text-tertiary);" onmouseover="this.style.color='var(--accent)';this.style.borderColor='var(--accent-border)'" onmouseout="this.style.color='var(--text-tertiary)';this.style.borderColor=''">
+                        <span class="iconify" data-icon="mdi:youtube" data-width="20"></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <div class="lg:col-span-3 sr-x" style="transition-delay:0.15s;">
+                <form id="contactForm" onsubmit="handleSubmit(event)" class="glass p-6 sm:p-8 rounded-2xl">
+                    <div class="grid sm:grid-cols-2 gap-4 mb-4">
+                        <div class="relative">
+                            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2" data-icon="mdi:account-outline" data-width="16" style="color:var(--text-tertiary);"></span>
+                            <input type="text" required placeholder="Nama Lengkap" class="form-input">
+                        </div>
+                        <div class="relative">
+                            <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2" data-icon="mdi:email-outline" data-width="16" style="color:var(--text-tertiary);"></span>
+                            <input type="email" required placeholder="Email" class="form-input">
+                        </div>
+                    </div>
+                    <div class="relative mb-4">
+                        <span class="iconify absolute left-3.5 top-1/2 -translate-y-1/2" data-icon="mdi:text-short" data-width="16" style="color:var(--text-tertiary);"></span>
+                        <input type="text" required placeholder="Subjek" class="form-input">
+                    </div>
+                    <div class="relative mb-6">
+                        <span class="iconify absolute left-3.5 top-3.5" data-icon="mdi:message-text-outline" data-width="16" style="color:var(--text-tertiary);"></span>
+                        <textarea rows="5" required placeholder="Tulis pesan..." class="form-input resize-none" style="padding-left:2.8rem;"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 rounded-xl font-bold text-xs tracking-[0.15em] uppercase text-white transition-all hover:scale-[1.02]" style="background:var(--accent);box-shadow:0 4px 20px var(--accent-glow);">
+                        <span class="flex items-center justify-center gap-2">
+                            Kirim Pesan
+                            <span class="iconify" data-icon="mdi:send" data-width="14"></span>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="py-8" style="border-top:1px solid var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-2.5">
+            <div class="w-6 h-6 rounded-lg flex items-center justify-center" style="background:var(--accent);"><span class="text-white font-black text-[10px]">R</span></div>
+            <span class="text-[10px] font-bold tracking-[0.12em] uppercase" style="color:var(--text-tertiary);">Kelas 12-5</span>
+        </div>
+        <p class="text-[10px]" style="color:var(--text-muted);">© 2025 Kelas 12-5 · Dibuat dengan <span style="color:var(--accent);">♦</span> oleh Aing sendiri</p>
+    </div>
+</footer>
+
+<!-- BACK TO TOP -->
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 right-6 w-11 h-11 rounded-xl glass flex items-center justify-center z-50 transition-all duration-300 opacity-0 pointer-events-none hover:scale-110" style="color:var(--text-secondary);">
+    <span class="iconify" data-icon="mdi:arrow-up" data-width="18"></span>
+</button>
+
+<script>
+// ===== DATA =====
+const students = [
+   { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" },
+  { name:"fulan", role:"fulan", cat:"fulan", s1:"fulan", s2:"fulan", quote:"fulan" }
+];
+
+// ===== RENDER STUDENTS =====
+const stuGrid = document.getElementById('stuGrid');
+let currentCat = 'all';
+
+students.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'stu-card sr-s tilt-card';
+    card.style.transitionDelay = `${(i % 6) * 0.05}s`;
+    card.dataset.name = s.name.toLowerCase();
+    card.dataset.cat = s.cat;
+    card.innerHTML = `
+        <div class="tilt-inner relative">
+            <div class="tilt-shine" style="border-radius:14px 14px 0 0;"></div>
+            <div class="photo-wrap" onclick="openStuPopup(${i})">
+                <img src="https://picsum.photos/seed/${s.s1}/400/533.jpg" alt="${s.name}" class="pf" loading="lazy">
+                <img src="https://picsum.photos/seed/${s.s2}/400/533.jpg" alt="${s.name}" class="pb" loading="lazy">
+            </div>
+            <div class="p-2.5 sm:p-3">
+                <h4 class="text-[11px] sm:text-xs font-extrabold tracking-tight leading-tight" style="color:var(--text-primary);">${s.name}</h4>
+                <p class="text-[9px] sm:text-[10px] font-semibold tracking-wider uppercase mt-0.5" style="color:var(--accent);opacity:0.7;">${s.role}</p>
+            </div>
+        </div>
+    `;
+    stuGrid.appendChild(card);
+});
+
+// ===== TAB FILTER =====
+function filterTab(cat, btn) {
+    currentCat = cat;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyFilters();
+}
+
+function filterStudents() { applyFilters(); }
+
+function applyFilters() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const cards = stuGrid.querySelectorAll('.stu-card');
+    let vis = 0;
+    cards.forEach(card => {
+        const nameMatch = card.dataset.name.includes(q);
+        const catMatch = currentCat === 'all' || card.dataset.cat === currentCat;
+        if (nameMatch && catMatch) {
+            card.classList.remove('hidden-card');
+            card.style.position = '';
+            vis++;
+        } else {
+            card.classList.add('hidden-card');
+            setTimeout(() => { if(card.classList.contains('hidden-card')) card.style.position = 'absolute'; }, 400);
+        }
+    });
+    document.getElementById('noRes').classList.toggle('show', vis === 0);
+}
+
+// ===== STUDENT POPUP =====
+function openStuPopup(i) {
+    const s = students[i];
+    document.getElementById('pp1').src = `https://picsum.photos/seed/${s.s1}/400/533.jpg`;
+    document.getElementById('pp2').src = `https://picsum.photos/seed/${s.s2}/400/533.jpg`;
+    document.getElementById('ppName').textContent = s.name;
+    document.getElementById('ppRole').textContent = s.role;
+    document.getElementById('ppQuote').textContent = `"${s.quote}"`;
+    document.getElementById('stuPopup').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeStuPopup() {
+    document.getElementById('stuPopup').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// ===== LIGHTBOX =====
+function openLightbox(el) {
+    document.getElementById('lightboxImg').src = el.querySelector('img').src;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape'){closeLightbox();closeStuPopup();} });
+
+// ===== GALLERY SCROLL =====
+function scrollGallery(dir) {
+    const g = document.getElementById('hGallery');
+    g.scrollBy({ left: dir * 350, behavior: 'smooth' });
+}
+
+// ===== MOBILE MENU =====
+let mobOpen = false;
+function toggleMob() {
+    mobOpen = !mobOpen;
+    document.getElementById('mobMenu').classList.toggle('active', mobOpen);
+    document.body.style.overflow = mobOpen ? 'hidden' : '';
+    document.getElementById('mobIcon').setAttribute('data-icon', mobOpen ? 'mdi:close' : 'mdi:menu');
+}
+function closeMob() {
+    mobOpen = false;
+    document.getElementById('mobMenu').classList.remove('active');
+    document.body.style.overflow = '';
+    document.getElementById('mobIcon').setAttribute('data-icon', 'mdi:menu');
+}
+
+// ===== ACCORDION =====
+function toggleAcc(btn) {
+    const isOpen = btn.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.acc-btn').forEach(b => { b.classList.remove('open'); b.nextElementSibling.classList.remove('open'); });
+    if (!isOpen) { btn.classList.add('open'); btn.nextElementSibling.classList.add('open'); }
+}
+
+// ===== THEME =====
+function toggleTheme() {
+    const h = document.documentElement;
+    const dark = h.dataset.theme === 'dark';
+    h.dataset.theme = dark ? 'light' : 'dark';
+    document.querySelector('.ti-dark').style.display = dark ? 'none' : '';
+    document.querySelector('.ti-light').style.display = dark ? '' : 'none';
+    localStorage.setItem('theme', h.dataset.theme);
+}
+(function(){
+    const t = localStorage.getItem('theme');
+    if(t){ document.documentElement.dataset.theme=t; document.querySelector('.ti-dark').style.display=t==='dark'?'':'none'; document.querySelector('.ti-light').style.display=t==='dark'?'none':''; }
+})();
+
+// ===== TOAST =====
+function showToast(msg, icon='mdi:check-circle') {
+    const c = document.getElementById('toastContainer');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.innerHTML = `<span class="iconify flex-shrink-0" data-icon="${icon}" data-width="20" style="color:var(--accent);"></span><span>${msg}</span>`;
+    c.appendChild(t);
+    setTimeout(() => { t.classList.add('out'); setTimeout(() => t.remove(), 300); }, 3500);
+}
+
+// ===== CONTACT FORM =====
+function handleSubmit(e) {
+    e.preventDefault();
+    showToast('Pesan berhasil dikirim! Kami akan segera merespon.', 'mdi:email-check-outline');
+    e.target.reset();
+}
+
+// ===== CUSTOM CURSOR =====
+const dot = document.getElementById('cursorDot');
+const ring = document.getElementById('cursorRing');
+let mx=0, my=0, rx=0, ry=0;
+
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx-4+'px'; dot.style.top = my-4+'px'; });
+
+function animCursor() {
+    rx += (mx - rx) * 0.15;
+    ry += (my - ry) * 0.15;
+    ring.style.left = rx-18+'px';
+    ring.style.top = ry-18+'px';
+    requestAnimationFrame(animCursor);
+}
+animCursor();
+
+// Hover effect on interactive elements
+document.addEventListener('mouseover', e => {
+    const t = e.target.closest('a, button, input, textarea, .stu-card, .h-gallery-item, .glass, .tilt-card');
+    if(t) ring.classList.add('hover'); else ring.classList.remove('hover');
+});
+
+// ===== 3D TILT =====
+document.querySelectorAll('.tilt-card').forEach(card => {
+    const inner = card.querySelector('.tilt-inner');
+    if(!inner) return;
+    card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const cx = rect.width / 2;
+        const cy = rect.height / 2;
+        const rotateX = ((y - cy) / cy) * -8;
+        const rotateY = ((x - cx) / cx) * 8;
+        inner.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02,1.02,1.02)`;
+        // Update shine position
+        const shine = inner.querySelector('.tilt-shine');
+        if(shine) { shine.style.setProperty('--mx', (x/rect.width*100)+'%'); shine.style.setProperty('--my', (y/rect.height*100)+'%'); }
+    });
+    card.addEventListener('mouseleave', () => {
+        inner.style.transform = 'perspective(800px) rotateX(0) rotateY(0) scale3d(1,1,1)';
+    });
+});
+
+// ===== PARTICLES =====
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let pMouse = { x: 0, y: 0 };
+
+function resizeCanvas() {
+    const sec = canvas.parentElement;
+    canvas.width = sec.offsetWidth;
+    canvas.height = sec.offsetHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        // Mouse repulsion
+        const dx = this.x - pMouse.x;
+        const dy = this.y - pMouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if(dist < 120) {
+            const force = (120 - dist) / 120;
+            this.x += (dx / dist) * force * 2;
+            this.y += (dy / dist) * force * 2;
+        }
+        if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(59,130,246,${this.opacity})`;
+        ctx.fill();
+    }
+}
+
+for(let i = 0; i < 80; i++) particles.push(new Particle());
+
+canvas.parentElement.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    pMouse.x = e.clientX - rect.left;
+    pMouse.y = e.clientY - rect.top;
+});
+
+function animParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => { p.update(); p.draw(); });
+    // Draw connections
+    for(let i = 0; i < particles.length; i++) {
+        for(let j = i+1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(59,130,246,${0.06 * (1 - dist/100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+    }
+    requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// ===== TYPING EFFECT =====
+const phrases = ["AKU NAK MELETUP", "ALOMANI BOS", "ANAK TEKNIK NIH", "MAPAI JALAN SATAPAK"];
+let phraseIdx = 0, charIdx = 0, deleting = false;
+const typeEl = document.getElementById('typeText');
+
+function typeEffect() {
+    const current = phrases[phraseIdx];
+    if(!deleting) {
+        typeEl.textContent = current.substring(0, charIdx + 1);
+        charIdx++;
+        if(charIdx === current.length) {
+            deleting = true;
+            setTimeout(typeEffect, 2000);
+            return;
+        }
+        setTimeout(typeEffect, 80);
+    } else {
+        typeEl.textContent = current.substring(0, charIdx - 1);
+        charIdx--;
+        if(charIdx === 0) {
+            deleting = false;
+            phraseIdx = (phraseIdx + 1) % phrases.length;
+            setTimeout(typeEffect, 500);
+            return;
+        }
+        setTimeout(typeEffect, 40);
+    }
+}
+setTimeout(typeEffect, 1200);
+
+// ===== SCROLL REVEAL =====
+const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if(entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Skill bars
+            entry.target.querySelectorAll('.skill-bar').forEach(bar => { bar.style.width = bar.dataset.w; });
+            // Circle stats
+            entry.target.querySelectorAll('.circle-stat').forEach(cs => {
+                const val = parseInt(cs.dataset.val);
+                const pct = parseFloat(cs.dataset.pct) || 100;
+                const fill = cs.querySelector('.fill');
+                const num = cs.querySelector('.num');
+                const circumference = 2 * Math.PI * 45; // ~283
+                const offset = circumference - (circumference * pct / 100);
+                fill.style.strokeDashoffset = offset;
+                // Animate number
+                let start = 0;
+                const dur = 1400;
+                const startTime = performance.now();
+                function animNum(now) {
+                    const p = Math.min((now - startTime) / dur, 1);
+                    const eased = 1 - Math.pow(1 - p, 4);
+                    num.textContent = Math.floor(eased * val);
+                    if(p < 1) requestAnimationFrame(animNum);
+                    else num.textContent = val;
+                }
+                requestAnimationFrame(animNum);
+            });
+            obs.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.sr,.sr-x,.sr-s').forEach(el => obs.observe(el));
+
+// ===== SCROLL PROGRESS & NAV =====
+const scrollProg = document.getElementById('scrollProgress');
+const nav = document.getElementById('mainNav');
+const btt = document.getElementById('btt');
+const navPills = document.querySelectorAll('.nav-pill');
+const secs = document.querySelectorAll('section[id]');
+let lastY = 0;
+
+window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProg.style.width = (y / docH * 100) + '%';
+
+    // Nav hide/show
+    if(y > lastY && y > 100) nav.style.transform = 'translateY(-100%)';
+    else nav.style.transform = 'translateY(0)';
+    nav.style.transition = 'transform 0.35s ease';
+    lastY = y;
+
+    // Back to top
+    btt.style.opacity = y > 600 ? '1' : '0';
+    btt.style.pointerEvents = y > 600 ? 'all' : 'none';
+
+    // Active pill
+    secs.forEach(sec => {
+        const top = sec.offsetTop - 150;
+        if(y >= top && y < top + sec.offsetHeight) {
+            navPills.forEach(p => p.classList.toggle('active', p.dataset.sec === sec.id));
+        }
+    });
+});
+</script>
+</body>
+</html>
